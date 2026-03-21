@@ -55,7 +55,18 @@ jobs:
           cp voicebridge-server.desktop AppDir/
           sed -i 's|Icon=voicebridge|Icon=/usr/share/icons/hicolor/256x256/apps/voicebridge.png|' AppDir/voicebridge-server.desktop
           echo "StartupNotify=true" >> AppDir/voicebridge-server.desktop
-          python -m python_appimage build app AppDir VoiceBridgeServer.AppImage
+          python -m python_appimage build app AppDir --python 3.14
+          APPIMAGE=$(ls AppDir*.AppImage 2>/dev/null | head -n 1)
+          if [ -z "$APPIMAGE" ]; then
+            APPIMAGE=$(find . -name "*.AppImage" -type f | head -n 1)
+          fi
+          if [ -n "$APPIMAGE" ]; then
+            echo "Found AppImage: $APPIMAGE"
+            mv "$APPIMAGE" VoiceBridgeServer.AppImage
+          else
+            echo "No AppImage found!"
+            exit 1
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: VoiceBridgeServer-Linux
