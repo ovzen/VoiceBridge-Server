@@ -57,10 +57,13 @@ jobs:
       - name: Build AppImage
         run: |
           pyinstaller --onefile --name VoiceBridgeServer gui.py
-          mkdir -p AppDir/usr/bin AppDir/usr/share/icons/hicolor/256x256/apps
+          mkdir -p AppDir/usr/bin
           cp dist/VoiceBridgeServer AppDir/usr/bin/
-          cp icons/voicebridge.png AppDir/usr/share/icons/hicolor/256x256/apps/voicebridge.png
+          cp icons/voicebridge.png AppDir/voicebridge.png
           cp voicebridge-server.desktop AppDir/
+          sed -i 's|Icon=.*|Icon=voicebridge|' AppDir/voicebridge-server.desktop
+          sed -i 's|Categories=.*|Categories=AudioVideo;|' AppDir/voicebridge-server.desktop
+          sed -i 's|Exec=.*|Exec=/usr/bin/VoiceBridgeServer|' AppDir/voicebridge-server.desktop
           python -m python_appimage build app AppDir --python-version 3.14
           mv AppDir*.AppImage VoiceBridgeServer.AppImage
       - uses: actions/upload-artifact@v4
