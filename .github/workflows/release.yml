@@ -61,11 +61,23 @@ jobs:
           cp dist/VoiceBridgeServer AppDir/usr/bin/
           cp icons/voicebridge.png AppDir/voicebridge.png
           cp voicebridge-server.desktop AppDir/
+          # Исправляем .desktop
           sed -i 's|Icon=.*|Icon=voicebridge|' AppDir/voicebridge-server.desktop
           sed -i 's|Categories=.*|Categories=AudioVideo;|' AppDir/voicebridge-server.desktop
           sed -i 's|Exec=.*|Exec=/usr/bin/VoiceBridgeServer|' AppDir/voicebridge-server.desktop
+          # Сборка AppImage
           python -m python_appimage build app AppDir --python-version 3.14
-          mv AppDir*.AppImage VoiceBridgeServer.AppImage
+          # Поиск и переименование
+          echo "Поиск созданного AppImage..."
+          ls -la *.AppImage || echo "Нет в текущей папке"
+          ls -la AppDir/*.AppImage || echo "Нет в AppDir"
+          APPIMAGE=$(find . -name "*.AppImage" -type f | head -n 1)
+          if [ -z "$APPIMAGE" ]; then
+            echo "AppImage не найден!"
+            exit 1
+          fi
+          echo "Найден: $APPIMAGE"
+          mv "$APPIMAGE" VoiceBridgeServer.AppImage
       - uses: actions/upload-artifact@v4
         with:
           name: VoiceBridgeServer-Linux
