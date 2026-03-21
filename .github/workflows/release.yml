@@ -55,7 +55,7 @@ jobs:
           cp voicebridge-server.desktop AppDir/
           sed -i 's|Icon=voicebridge|Icon=/usr/share/icons/hicolor/256x256/apps/voicebridge.png|' AppDir/voicebridge-server.desktop
           echo "StartupNotify=true" >> AppDir/voicebridge-server.desktop
-          python -m python_appimage build app -p 3.10 -o VoiceBridgeServer.AppImage AppDir/
+          python -m python_appimage build AppDir --output VoiceBridgeServer.AppImage
       - uses: actions/upload-artifact@v4
         with:
           name: VoiceBridgeServer-Linux
