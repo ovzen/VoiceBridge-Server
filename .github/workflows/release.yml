@@ -57,23 +57,20 @@ jobs:
       - name: Build AppImage
         run: |
           pyinstaller --onefile --name VoiceBridgeServer gui.py
-          mkdir -p AppDir/usr/bin AppDir/usr/share/icons/hicolor/256x256/apps
+          mkdir -p AppDir/usr/bin AppDir/usr/share/icons/hicolor/512x512/apps
           cp dist/VoiceBridgeServer AppDir/usr/bin/
-          cp icons/voicebridge.png AppDir/usr/share/icons/hicolor/256x256/apps/voicebridge.png
+          cp icons/voicebridge.png AppDir/usr/share/icons/hicolor/512x512/apps/voicebridge.png
+          cp icons/voicebridge.png AppDir/voicebridge.png   # ← дублируем иконку в корень
           cp voicebridge-server.desktop AppDir/
-          sed -i 's|Icon=.*|Icon=voicebridge|' AppDir/voicebridge-server.desktop
+          sed -i 's|Icon=.*|Icon=voicebridge.png|' AppDir/voicebridge-server.desktop
           sed -i 's|Categories=.*|Categories=AudioVideo;|' AppDir/voicebridge-server.desktop
           sed -i 's|Exec=.*|Exec=/usr/bin/VoiceBridgeServer|' AppDir/voicebridge-server.desktop
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool-x86_64.AppImage
           ./appimagetool-x86_64.AppImage --appimage-extract
           ./squashfs-root/AppRun AppDir
-          if [ -f VoiceBridgeServer*.AppImage ]; then
-            mv VoiceBridgeServer*.AppImage VoiceBridgeServer.AppImage
-          else
-            APPIMAGE=$(ls *.AppImage | head -n 1)
-            mv "$APPIMAGE" VoiceBridgeServer.AppImage
-          fi
+          APPIMAGE=$(ls *.AppImage | head -n 1)
+          mv "$APPIMAGE" VoiceBridgeServer.AppImage
       - uses: actions/upload-artifact@v4
         with:
           name: VoiceBridgeServer-Linux
