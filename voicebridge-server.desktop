@@ -1,8 +1,9 @@
 [Desktop Entry]
 Name=VoiceBridge Server
-Exec=VoiceBridgeServer
-Icon=voicebridge.png
+Exec=/usr/bin/VoiceBridgeServer
+Icon=voicebridge
 Type=Application
-Categories=AudioVideo;Network;
+Categories=AudioVideo;
 Terminal=false
 StartupNotify=true
+Comment=Voice bridge server
