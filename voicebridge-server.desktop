@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=VoiceBridge Server
+Exec=VoiceBridgeServer
+Icon=voicebridge
+Type=Application
+Categories=AudioVideo;Network;
+Terminal=false
