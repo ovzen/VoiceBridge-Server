@@ -1,7 +1,8 @@
 [Desktop Entry]
 Name=VoiceBridge Server
 Exec=VoiceBridgeServer
-Icon=voicebridge
+Icon=voicebridge.png
 Type=Application
 Categories=AudioVideo;Network;
 Terminal=false
+StartupNotify=true

@@ -61,8 +61,6 @@ jobs:
           cp dist/VoiceBridgeServer AppDir/usr/bin/
           cp icons/voicebridge.png AppDir/usr/share/icons/hicolor/256x256/apps/voicebridge.png
           cp voicebridge-server.desktop AppDir/
-          sed -i 's|Icon=voicebridge|Icon=/usr/share/icons/hicolor/256x256/apps/voicebridge.png|' AppDir/voicebridge-server.desktop
-          echo "StartupNotify=true" >> AppDir/voicebridge-server.desktop
           python -m python_appimage build app AppDir --python-version 3.14
           APPIMAGE=$(ls AppDir*.AppImage 2>/dev/null | head -n 1)
           if [ -z "$APPIMAGE" ]; then
