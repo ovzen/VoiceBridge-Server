@@ -212,8 +212,19 @@ class ServerGUI(ctk.CTk):
         self.port_entry.insert(0, str(self.config.get("port", "8765")))
         self.pass_entry.insert(0, self.config.get("password", "default_pass"))
         self.cert_ip_entry.insert(0, self.config.get("server_ip", "192.168.1.10"))
+
+        # Загрузка индекса устройства
+        index = self.config.get("output_device_index")
+        if index is not None:
+            self.use_index_var.set(True)
+            self.index_entry.configure(state="normal")
+            self.index_entry.delete(0, "end")
+            self.index_entry.insert(0, str(index))
+        else:
+            self.use_index_var.set(False)
+            self.index_entry.configure(state="disabled")
+
         saved_device = self.config.get("output_device", "")
-        # Ищем в списке устройств элемент, начинающийся с saved_device + " (индекс"
         if saved_device:
             for item in self.devices:
                 if item.startswith(saved_device + " (индекс"):
@@ -230,10 +241,21 @@ class ServerGUI(ctk.CTk):
         self.config['server_ip'] = self.cert_ip_entry.get()
         self.config['port'] = int(self.port_entry.get())
         self.config['password'] = self.pass_entry.get()
-        # Сохраняем только имя устройства без (индекс)
+
+        # Сохраняем имя устройства (без индекса)
         device_full = self.device_var.get()
         device_name = device_full.split(" (индекс")[0].strip()
         self.config['output_device'] = device_name
+
+        # Сохраняем индекс устройства, если включён
+        if self.use_index_var.get():
+            try:
+                self.config['output_device_index'] = int(self.index_entry.get())
+            except ValueError:
+                self.config['output_device_index'] = None
+        else:
+            self.config['output_device_index'] = None
+
         config_manager.save_config(self.config)
         self.log("✅ Настройки сохранены")
 
@@ -450,7 +472,7 @@ class ServerGUI(ctk.CTk):
                                    f"Всего клиентов: {stats['total_clients']}\n"
                                    f"Трафик: {stats['total_traffic']/1024:.1f} KB\n"
                                    )
-        self.after(500, self.update_stats)  # Уменьшено до 500 мс
+        self.after(500, self.update_stats)
 
 if __name__ == "__main__":
     app = ServerGUI()

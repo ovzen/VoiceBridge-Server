@@ -10,5 +10,6 @@
   "max_audio_queue_size": 20,
   "log_file": "server.log",
   "cert_file": null,
-  "key_file": null
+  "key_file": null,
+  "output_device_index": null
 }

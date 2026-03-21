@@ -22,7 +22,7 @@ class VoiceBridgeServer:
         self.security = SecurityManager(config)
         self.audio = AudioProcessor(
             device_name=config.get("output_device"),
-            device_index=None,  # можно добавить поддержку индекса в конфиг
+            device_index=config.get("output_device_index"),
             queue_size=config.get("max_audio_queue_size", 20)
         )
         self.clients = ClientsManager(self.security)
@@ -103,9 +103,11 @@ class VoiceBridgeServer:
                 else:
                     try:
                         data = json.loads(message)
-                        if data.get("type") == "pong":
-                            latency = time.time() - data.get("timestamp", time.time())
-                            self.clients.update_latency(websocket, latency)
+                        # ИСПРАВЛЕНИЕ ПИНГА: отвечаем на ping отправкой pong
+                        if data.get("type") == "ping":
+                            timestamp = data.get("timestamp", time.time())
+                            pong_msg = json.dumps({"type": "pong", "timestamp": timestamp})
+                            await websocket.send(pong_msg)
                         elif data.get("type") == "effect":
                             client.effect = data.get("effect", "none")
                         elif data.get("type") == "admin":
@@ -121,7 +123,6 @@ class VoiceBridgeServer:
     async def handle_admin_command(self, websocket, data, client_ip):
         command = data.get("command")
         if command == "login":
-            # Rate limit для неудачных попыток входа
             password = data.get("password")
             if password == self.admin_password:
                 await websocket.send(json.dumps({
@@ -132,7 +133,7 @@ class VoiceBridgeServer:
                 }))
             else:
                 # Фиксируем неудачную попытку
-                self.security.check_rate_limit(client_ip, "admin")  # просто добавляем запись
+                self.security.check_rate_limit(client_ip, "admin")
                 await websocket.send(json.dumps({
                     "type": "admin_response",
                     "command": "login",
@@ -183,7 +184,7 @@ class VoiceBridgeServer:
             self.host,
             self.port,
             ssl=ssl_context,
-            max_size=1024 * 1024,  # 1 МБ
+            max_size=1024 * 1024,
         )
         self.running = True
         self.audio.start()
