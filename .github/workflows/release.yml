@@ -32,9 +32,10 @@ jobs:
         run: |
           $version = "${{ github.ref_name }}" -replace '^v', ''
           Write-Host "Building version: $version"
-          nuitka --windows-console-mode=disable `
+          nuitka --onefile --windows-console-mode=disable `
           --enable-plugin=tk-inter `
           --include-data-dir=icons=icons `
+          --windows-icon-from-ico=icons/voicebridge.ico `
           --include-data-file=voicebridge-server.desktop=voicebridge-server.desktop `
           --windows-product-name="VoiceBridge Server" `
           --windows-company-name="OVZEN Project" `
