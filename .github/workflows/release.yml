@@ -37,7 +37,7 @@ jobs:
           --windows-product-name="VoiceBridge Server" `
           --windows-company-name="OVZEN Project" `
           --windows-file-description="VoiceBridge Server" `
-          --windows-product-version="${{ github.ref_name }}" `
+          --windows-product-version="$version" `
           --output-dir=dist gui.py
           if (Test-Path dist/gui.dist/gui.exe) {
           Move-Item dist/gui.dist/gui.exe dist/VoiceBridgeServer.exe
