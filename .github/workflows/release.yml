@@ -35,7 +35,7 @@ jobs:
           nuitka --windows-console-mode=disable `
           --enable-plugin=tk-inter `
           --include-data-dir=icons=icons `
-          --include-data-file=voicebridge-server.desktop=voicebridge-server.desktop
+          --include-data-file=voicebridge-server.desktop=voicebridge-server.desktop `
           --windows-product-name="VoiceBridge Server" `
           --windows-company-name="OVZEN Project" `
           --windows-file-description="VoiceBridge Server" `
