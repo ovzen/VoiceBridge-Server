@@ -42,7 +42,11 @@
 Если антивирус блокирует запуск, добавьте файл в исключения.
 
 ## ⚙️ Конфигурация
-Файл `server_config.json` создаётся автоматически при первом запуске. Пример содержимого:
+Файл `server_config.json` создаётся автоматически при первом запуске. 
+- **Windows**: `%APPDATA%\VoiceBridge\server_config.json`
+- **Linux/macOS**: `~/.config/VoiceBridge/server_config.json`
+  
+Пример содержимого:
 
 ```json
 {
