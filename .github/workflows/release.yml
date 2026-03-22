@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt nuitka
+          pip install -r requirements.txt nuitka zstandard
       - name: Build EXE
         run: |
           $version = "${{ github.ref_name }}" -replace '^v', ''
@@ -41,6 +41,7 @@ jobs:
           --windows-company-name="OVZEN Project" `
           --windows-file-description="VoiceBridge Server" `
           --windows-product-version="$version" `
+          --assume-yes-for-downloads `
           --output-dir=dist gui.py
           if (Test-Path dist/gui.dist/gui.exe) {
           Move-Item dist/gui.dist/gui.exe dist/VoiceBridgeServer.exe
