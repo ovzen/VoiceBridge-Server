@@ -27,10 +27,27 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt pyinstaller
+          pip install -r requirements.txt nuitka
       - name: Build EXE
         run: |
-          pyinstaller --onefile --windowed --icon=icons/voicebridge.ico --name VoiceBridgeServer gui.py
+          nuitka --standalone --windows-disable-console `
+          --enable-plugin=tk-inter `
+          --include-data-dir=icons=icons `
+          --include-data-file=voicebridge-server.desktop=. `
+          --windows-product-name="VoiceBridge Server" `
+          --windows-company-name="OVZEN Project" `
+          --windows-file-description="VoiceBridge Server" `
+          --windows-product-version="${{ github.ref_name }}" `
+          --output-dir=dist gui.py
+          if (Test-Path dist/gui.dist/gui.exe) {
+          Move-Item dist/gui.dist/gui.exe dist/VoiceBridgeServer.exe
+          Remove-Item -Recurse -Force dist/gui.dist
+          } elseif (Test-Path dist/gui.exe) {
+          Move-Item dist/gui.exe dist/VoiceBridgeServer.exe
+          } else {
+          Write-Error "Не найден скомпилированный файл!"
+          exit 1
+          }
       - uses: actions/upload-artifact@v4
         with:
           name: VoiceBridgeServer-Windows
